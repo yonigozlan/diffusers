@@ -39,6 +39,7 @@ from ..embeddings import (
     TextImageProjection,
     TextImageTimeEmbedding,
     TextTimeEmbedding,
+    EEGTimeEmbedding,
     TimestepEmbedding,
     Timesteps,
 )
@@ -382,6 +383,10 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin, UNet2DConditionLoadersMixin,
 
             self.add_embedding = TextTimeEmbedding(
                 text_time_embedding_from_dim, time_embed_dim, num_heads=addition_embed_type_num_heads
+            )
+        if addition_embed_type == "eeg_time":
+            self.add_embedding = EEGTimeEmbedding(
+                addition_time_embed_dim, time_embed_dim, num_channels=128
             )
         elif addition_embed_type == "text_image":
             # text_embed_dim and image_embed_dim DON'T have to be `cross_attention_dim`. To not clutter the __init__ too much
@@ -998,6 +1003,12 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin, UNet2DConditionLoadersMixin,
 
         if self.config.addition_embed_type == "text":
             aug_emb = self.add_embedding(encoder_hidden_states)
+        # !! Added for EEG
+        elif self.config.addition_embed_type == "eeg_time"
+            c = self.add_embedding(encoder_hidden_states, num_channels=128)
+            assert c.shape[1] == 1, f'found {c.shape}'
+            aug_emb = torch.squeeze(c, dim=1)
+        # !! END Added for EEG
         elif self.config.addition_embed_type == "text_image":
             # Kandinsky 2.1 - style
             if "image_embeds" not in added_cond_kwargs:
