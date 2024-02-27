@@ -509,7 +509,8 @@ class TextTimeEmbedding(nn.Module):
         return hidden_states
 
 class EEGTimeEmbedding(nn.Module):
-    def __init__(self, encoder_dim: int, time_embed_dim: int, global_pool: bool = False, num_channels=128):
+    def __init__(self, encoder_dim: int, time_embed_dim: int, global_pool: bool = False, num_channels=77):
+        print("encoder_dim", encoder_dim, 'time_embed_dim', time_embed_dim, 'global_pool', global_pool, 'num_channels', num_channels)
         super().__init__()
         self.time_embed_condtion = nn.Sequential(
                 nn.Conv1d(num_channels, num_channels//2, 1, bias=True),

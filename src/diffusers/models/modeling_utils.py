@@ -586,6 +586,10 @@ class ModelMixin(torch.nn.Module, PushToHubMixin):
             **kwargs,
         )
 
+        print("config", config)
+        config["addition_embed_type"] = "eeg_time"
+        config["time_embedding_type"] = "positional"
+
         # load model
         model_file = None
         if from_flax:
