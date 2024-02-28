@@ -385,7 +385,6 @@ class UNet2DConditionModel(ModelMixin, ConfigMixin, UNet2DConditionLoadersMixin,
                 text_time_embedding_from_dim, time_embed_dim, num_heads=addition_embed_type_num_heads
             )
         if addition_embed_type == "eeg_time":
-            print("time_embed_dim", time_embed_dim)
             self.add_embedding = EEGTimeEmbedding(
                 cross_attention_dim, time_embed_dim, num_channels=77
             )
